@@ -52,6 +52,7 @@ const DOM = (() => {
     div.appendChild(createPages(book));
     div.appendChild(createReadingStatus(book));
     div.appendChild(createDeleteButton(book));
+    div.appendChild(createEditReadingStatusButton(book));
     div.setAttribute("data-value", book.dataValue);
     return div;
   }
@@ -90,11 +91,47 @@ const DOM = (() => {
     element.textContent = book.pages;
     return element;
   }
+  let readingStatus;
   const createReadingStatus = (book) => {
     const element = document.createElement("p");
-    let readingStatus;
-    book.isRead ? readingStatus = "Read" : readingStatus = "Not read yet";
+    element.setAttribute("id", `reading-status-${book.dataValue}`)
+    setReadingStatus(book);
     element.textContent = readingStatus;
+    return element;
+  }
+  const setReadingStatus = (book) => {
+    book.isRead == "true" ? setReadingStatusAsRead() : setReadingStatusAsNotRead();
+  }
+  const setReadingStatusAsRead = () => {
+    readingStatus = "Read";
+  }
+  const setReadingStatusAsNotRead = () => {
+    readingStatus = "Not read yet";
+  }
+  const createEditReadingStatusButton = (book) => {
+    const element = document.createElement("span");
+    function setIcon() {
+      if (book.isRead == "true" || book.isRead == true) {
+        element.textContent = "check_circle";
+      } else {
+        element.textContent = "unpublished";
+      }
+    }
+    element.setAttribute("data-value", book.dataValue);
+    element.classList.add("material-icons");
+    setIcon();
+    element.addEventListener("click", () => {
+      const index = Library.getIndexOfBookWithMyValue();
+      const status = document.getElementById(`reading-status-${book.dataValue}`);
+      if (Library.content[index].isRead == "true" || Library.content[index].isRead == true) {
+        Library.content[index].isRead = false;
+        status.textContent = "Not read yet";
+      } else {
+        Library.content[index].isRead = true;
+        status.textContent = "Read";
+      }
+      setIcon();
+    });
     return element;
   }
   return {
