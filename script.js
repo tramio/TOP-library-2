@@ -1,5 +1,3 @@
-let myLibrary = [];
-
 function Book({title, author, pages, isRead}) {
   this.title = title;
   this.author = author;
@@ -7,13 +5,20 @@ function Book({title, author, pages, isRead}) {
   this.isRead = isRead;
 }
 
-function addBookToLibrary(book) {
-  myLibrary.push(book);
-}
+const Library = (() => {
+  const content = [];
+  const addBook = (book) => {
+    content.push(book);
+  }
+  return {
+    content,
+    addBook,
+  }
+})();
 
 const DOM = (() => {
   const renderLibrary = () => {
-    myLibrary.forEach(bookObject => {
+    Library.content.forEach(bookObject => {
       renderBook(bookObject);
     });
   }
@@ -60,7 +65,7 @@ const DOM = (() => {
 
 function createSample() {
   const lotr = new Book({title: "lotr", author: "tolkien", pages: 418, isRead: true});
-  addBookToLibrary(lotr);
+  Library.addBook(lotr);
 }
 
 createSample();
@@ -112,7 +117,7 @@ const ButtonSubmitForm = (() => {
   const enable = () => {
     btn.addEventListener("click", () => {
       const newBook = new Book(Form.getInput());
-      addBookToLibrary(newBook);
+      Library.addBook(newBook);
     });
   }
   return {
