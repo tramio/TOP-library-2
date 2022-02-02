@@ -10,9 +10,13 @@ const Library = (() => {
   const addBook = (book) => {
     content.push(book);
   }
+  const getLastBook = () => {
+    return content[content.length-1];
+  }
   return {
     content,
     addBook,
+    getLastBook,
   }
 })();
 
@@ -26,6 +30,9 @@ const DOM = (() => {
     const bookElement = createBook(bookObject);
     const libraryElement = document.getElementById("library");
     libraryElement.appendChild(bookElement);
+  }
+  const renderLastBook = () => {
+    renderBook(Library.getLastBook());
   }
   const createBook = (book) => {
     const div = document.createElement("div");
@@ -60,6 +67,7 @@ const DOM = (() => {
   }
   return {
     renderLibrary,
+    renderLastBook,
   }
 })();
 
@@ -135,6 +143,7 @@ const ButtonSubmitForm = (() => {
       Form.form.reset();
       Form.sayThankYou();
       setTimeout(Form.clearInformation, 1000);
+      DOM.renderLastBook();
     });
   }
   return {
