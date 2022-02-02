@@ -78,6 +78,9 @@ const Form = (() => {
       form.classList.toggle("hidden");
     }
   }
+  const hide = () => {
+    form.classList.add("hidden");
+  }
   const getValueOf = (ElementID) => {
     return document.getElementById(ElementID).value;
   }
@@ -90,9 +93,20 @@ const Form = (() => {
       title, author, pages, isRead
     }
   }
+  const formInformation = document.getElementById("form-info");
+  const sayThankYou = () => {
+    formInformation.textContent = "Thank you for your submission!";
+  }
+  const clearInformation = () => {
+    formInformation.textContent = "";
+  }
   return {
+    form,
     display,
+    hide,
     getInput,
+    sayThankYou,
+    clearInformation,
   }
 })();
 
@@ -118,6 +132,9 @@ const ButtonSubmitForm = (() => {
     btn.addEventListener("click", () => {
       const newBook = new Book(Form.getInput());
       Library.addBook(newBook);
+      Form.form.reset();
+      Form.sayThankYou();
+      setTimeout(Form.clearInformation, 1000);
     });
   }
   return {
