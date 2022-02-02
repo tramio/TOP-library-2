@@ -67,3 +67,33 @@ function createSample() {
 
 createSample();
 DOM.renderLibrary();
+
+const Form = (() => {
+  const form = document.getElementById("form-add-book");
+  const display = () => {
+    if (form.classList.contains("hidden")) {
+      form.classList.toggle("hidden");
+    }
+  }
+  return {
+    display,
+  }
+})();
+
+const ButtonAddBook = (() => {
+  const btn = document.getElementById("btn-add-book");
+  const enable = () => {
+    btn.addEventListener("click", () => {
+      Form.display();
+      disable();
+    });
+  };
+  const disable = () => {
+    btn.disabled = true;
+  };
+  return {
+    enable,
+  }
+})();
+
+ButtonAddBook.enable();
