@@ -1,3 +1,5 @@
+let bookCounter;
+
 function Book({title, author, pages, isRead}) {
   this.title = title;
   this.author = author;
@@ -41,7 +43,14 @@ const DOM = (() => {
     div.appendChild(createAuthor(book));
     div.appendChild(createPages(book));
     div.appendChild(createReadingStatus(book));
+    div.appendChild(createDeleteButton());
     return div;
+  }
+  const createDeleteButton = () => {
+    const element = document.createElement("span");
+    element.classList.add("material-icons");
+    element.textContent = "delete";
+    return element;
   }
   const createTitle = (book) => {
     const element = document.createElement("h1");
