@@ -36,9 +36,9 @@ const Library = (() => {
 })();
 
 const DOM = (() => {
+  const libraryElement = document.getElementById("library");
   const renderBook = (bookObject) => {
     const bookElement = createBook(bookObject);
-    const libraryElement = document.getElementById("library");
     libraryElement.appendChild(bookElement);
   }
   const renderLastBook = () => {
@@ -55,6 +55,11 @@ const DOM = (() => {
     div.setAttribute("data-value", book.dataValue);
     return div;
   }
+  const deleteBookElement = (dataValue) => {
+    let mySelector = `[data-value="${dataValue}"]`
+    const bookElement = document.querySelector(mySelector);
+    libraryElement.removeChild(bookElement);
+  }
   const createDeleteButton = (book) => {
     const element = document.createElement("span");
     element.setAttribute("data-value", book.dataValue);
@@ -62,10 +67,12 @@ const DOM = (() => {
     element.textContent = "delete";
 
     element.addEventListener("click", (value) => {
+      let index = Library.getIndexOfBookWithMyValue();
       myValue = element.dataset.value;
-      Library.deleteBook(Library.getIndexOfBookWithMyValue());
-      // Remove dom element also
+      Library.deleteBook(index);
+      deleteBookElement(myValue);
     })
+
     return element;
   }
   const createTitle = (book) => {
