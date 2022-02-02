@@ -1,6 +1,6 @@
 let myLibrary = [];
 
-function Book(title, author, pages, isRead) {
+function Book({title, author, pages, isRead}) {
   this.title = title;
   this.author = author;
   this.pages = pages;
@@ -59,10 +59,8 @@ const DOM = (() => {
 })();
 
 function createSample() {
-  const lotr = new Book("lotr", "tolkien", 418, true);
-  const hp = new Book("hp", "jk rowling", 435, false);
+  const lotr = new Book({title: "lotr", author: "tolkien", pages: 418, isRead: true});
   addBookToLibrary(lotr);
-  addBookToLibrary(hp);
 }
 
 createSample();
@@ -75,8 +73,21 @@ const Form = (() => {
       form.classList.toggle("hidden");
     }
   }
+  const getValueOf = (ElementID) => {
+    return document.getElementById(ElementID).value;
+  }
+  const getInput = () => {
+    const title = getValueOf("title-input");
+    const author = getValueOf("author-input");
+    const pages = getValueOf("pages-input");
+    const isRead = getValueOf("is-read-input");
+    return {
+      title, author, pages, isRead
+    }
+  }
   return {
     display,
+    getInput,
   }
 })();
 
@@ -96,4 +107,18 @@ const ButtonAddBook = (() => {
   }
 })();
 
+const ButtonSubmitForm = (() => {
+  const btn = document.getElementById("btn-submit-form");
+  const enable = () => {
+    btn.addEventListener("click", () => {
+      const newBook = new Book(Form.getInput());
+      addBookToLibrary(newBook);
+    });
+  }
+  return {
+    enable,
+  }
+})();
+
 ButtonAddBook.enable();
+ButtonSubmitForm.enable();
