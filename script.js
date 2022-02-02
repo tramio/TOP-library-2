@@ -1,10 +1,11 @@
-let bookCounter;
+let bookCounter = 0;
 
 function Book({title, author, pages, isRead}) {
   this.title = title;
   this.author = author;
   this.pages = pages;
   this.isRead = isRead;
+  this.dataValue = bookCounter;
 }
 
 const Library = (() => {
@@ -23,11 +24,11 @@ const Library = (() => {
 })();
 
 const DOM = (() => {
-  const renderLibrary = () => {
-    Library.content.forEach(bookObject => {
-      renderBook(bookObject);
-    });
-  }
+  // const renderLibrary = () => {
+  //   Library.content.forEach(bookObject => {
+  //     renderBook(bookObject);
+  //   });
+  // }
   const renderBook = (bookObject) => {
     const bookElement = createBook(bookObject);
     const libraryElement = document.getElementById("library");
@@ -43,11 +44,13 @@ const DOM = (() => {
     div.appendChild(createAuthor(book));
     div.appendChild(createPages(book));
     div.appendChild(createReadingStatus(book));
-    div.appendChild(createDeleteButton());
+    div.appendChild(createDeleteButton(book));
+    div.setAttribute("data-value", book.dataValue);
     return div;
   }
-  const createDeleteButton = () => {
+  const createDeleteButton = (book) => {
     const element = document.createElement("span");
+    element.setAttribute("data-value", book.dataValue);
     element.classList.add("material-icons");
     element.textContent = "delete";
     return element;
@@ -75,18 +78,10 @@ const DOM = (() => {
     return element;
   }
   return {
-    renderLibrary,
+    // renderLibrary,
     renderLastBook,
   }
 })();
-
-function createSample() {
-  const lotr = new Book({title: "lotr", author: "tolkien", pages: 418, isRead: true});
-  Library.addBook(lotr);
-}
-
-createSample();
-DOM.renderLibrary();
 
 const Form = (() => {
   const form = document.getElementById("form-add-book");
@@ -147,6 +142,7 @@ const ButtonSubmitForm = (() => {
   const btn = document.getElementById("btn-submit-form");
   const enable = () => {
     btn.addEventListener("click", () => {
+      bookCounter++;
       const newBook = new Book(Form.getInput());
       Library.addBook(newBook);
       Form.form.reset();
