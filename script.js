@@ -1,4 +1,5 @@
 let bookCounter = 0;
+let myValue = 0;
 
 function Book({title, author, pages, isRead}) {
   this.title = title;
@@ -16,19 +17,25 @@ const Library = (() => {
   const getLastBook = () => {
     return content[content.length-1];
   }
+  const deleteBook = (index) => {
+    content.splice(index, 1);
+  }
+  const getIndexOfBookWithMyValue = () => {
+    return content.findIndex(hasMyValue);
+  }
+  const hasMyValue = (book) => {
+    return book.dataValue == myValue;
+  }
   return {
     content,
     addBook,
     getLastBook,
+    deleteBook,
+    getIndexOfBookWithMyValue,
   }
 })();
 
 const DOM = (() => {
-  // const renderLibrary = () => {
-  //   Library.content.forEach(bookObject => {
-  //     renderBook(bookObject);
-  //   });
-  // }
   const renderBook = (bookObject) => {
     const bookElement = createBook(bookObject);
     const libraryElement = document.getElementById("library");
@@ -53,6 +60,12 @@ const DOM = (() => {
     element.setAttribute("data-value", book.dataValue);
     element.classList.add("material-icons");
     element.textContent = "delete";
+
+    element.addEventListener("click", (value) => {
+      myValue = element.dataset.value;
+      Library.deleteBook(Library.getIndexOfBookWithMyValue());
+      // Remove dom element also
+    })
     return element;
   }
   const createTitle = (book) => {
@@ -78,7 +91,6 @@ const DOM = (() => {
     return element;
   }
   return {
-    // renderLibrary,
     renderLastBook,
   }
 })();
@@ -142,13 +154,13 @@ const ButtonSubmitForm = (() => {
   const btn = document.getElementById("btn-submit-form");
   const enable = () => {
     btn.addEventListener("click", () => {
-      bookCounter++;
       const newBook = new Book(Form.getInput());
       Library.addBook(newBook);
       Form.form.reset();
       Form.sayThankYou();
       setTimeout(Form.clearInformation, 1000);
       DOM.renderLastBook();
+      bookCounter++;
     });
   }
   return {
